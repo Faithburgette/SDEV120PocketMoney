@@ -1,0 +1,37 @@
+start
+mod1: employee information
+FUNCTION get_employee_info
+print "enter password"
+input password
+print "enter employee first name"
+input firstname
+print "enter employee last name"
+input lastname
+print "enter employee id"
+input employeeid
+print "number of dependents"
+input numdependents
+print "hours worked"
+input hoursworked
+call get_hourly_rate_from_db
+return hourly_rate
+return first_name, last_name, employee_id, num_dependents, hours_worked, hourly_rate
+END FUNCTION
+FUNCTION get_password
+    prompt "enter password"
+    set password = ""
+WHILE TRUE
+READ character
+IF character = enter 
+THEN break
+END IF
+    append character to password
+    print "*"
+END IF
+RETURN password
+END FUNCTION
+mod2: database
+FUNCTION connect_to_database
+connect to database
+print "search database"
+END FUNCTION
