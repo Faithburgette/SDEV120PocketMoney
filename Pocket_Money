@@ -35,4 +35,20 @@ start
   connect to database
   print "search database"
   END FUNCTION
-call 
+  call grossIncome ()
+  call taxCalculations () 
+  outputs
+stop
+
+grossIncome ()
+  input hourlyPay
+  overtimeRate = hourlyPay * 1.5 
+  IF hoursWorked > 40 
+	  basePay = hourlyPay * 40
+  	overtimePay = (hoursWorked - 40) * overtimeRate
+  ELSE
+  	basePay = hoursWorked * 40
+  	overtimePay = 0
+  END IF 
+  grossIncome = basePay + overtimePay
+return
