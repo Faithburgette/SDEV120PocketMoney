@@ -3,14 +3,14 @@ mod1: employee information
 FUNCTION get_employee_info
 print "enter password"
 input password
-print "enter employee first name"
+print "enter employee first_name"
 input firstname
-print "enter employee last name"
+print "enter employee last_name"
 input lastname
-print "enter employee id"
-input employeeid
-print "number of dependents"
-input numdependents
+print "enter employee_id"
+input employee_id
+print "number_of_dependents"
+input numOfdependents
 print "hours worked"
 input hoursworked
 call get_hourly_rate_from_db
