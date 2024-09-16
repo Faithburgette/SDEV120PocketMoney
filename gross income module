@@ -1,5 +1,6 @@
 grossIncome ()
   input hourlyPay
+  input hoursWorked
   overtimeRate = hourlyPay * 1.5 
   IF hoursWorked > 40 
 	  basePay = hourlyPay * 40
@@ -9,4 +10,4 @@ grossIncome ()
   	overtimePay = 0
   END IF 
   grossIncome = basePay + overtimePay
-return
+return grossIncome
