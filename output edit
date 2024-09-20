@@ -1,0 +1,29 @@
+Output
+
+//Give the user the option of how to display data Report or Dataset in excel
+output "How would you like your data. Please select option!"
+
+function create_button("Create reort", Create_report, positionX, position Y, width, height)
+   
+   IF
+//create report (width, height)
+Create_report()
+   Set report.width = 8.3
+   set report.height = 11.7
+   Set report.background = rgb 255,255,255
+   Set report.fontColor = 0,0,0
+   Set report.font = Calibri, 12
+   
+Create Header()
+   set title.report "Report for:" lastname,firstname employee id
+   Set header.fontsize 14
+   Set dateToday ()
+
+Display_table(data)
+   Set tableData
+   print "Report Number:" "xx"   // pull Number from Database 
+   print "Name" lastname, first name
+   print employeeid
+   print "Report Requested by "xx" // person who logged in
+   print "hourlyPay"
+   print "
