@@ -1,0 +1,87 @@
+START
+
+MODULE mod1: Employee Information
+
+FUNCTION get_employee_info
+    PRINT "Enter password"
+    SET password = get_password()
+    
+    PRINT "Enter employee first name"
+    INPUT firstname
+    
+    PRINT "Enter employee last name"
+    INPUT lastname
+    
+    PRINT "Enter employee ID"
+    INPUT employeeid
+    
+    PRINT "Number of dependents"
+    INPUT numdependents
+    
+    PRINT "Hours worked"
+    INPUT hoursworked
+    
+    SET hourly_rate = call get_hourly_rate_from_db()
+    
+    RETURN (firstname, lastname, employeeid, numdependents, hoursworked, hourly_rate)
+END FUNCTION
+
+FUNCTION get_password
+    PRINT "Enter password"
+    SET password = ""
+    
+    WHILE TRUE
+        READ character
+        IF character == ENTER THEN
+            BREAK
+        END IF
+        APPEND character to password
+        PRINT "*"
+    END WHILE
+    
+    RETURN password
+END FUNCTION
+
+MODULE mod2: Database
+
+FUNCTION connect_to_database
+    CONNECT to database
+    PRINT "Searching database"
+END FUNCTION
+
+CALL grossIncome()
+CALL taxCalculations()
+OUTPUT results
+
+STOP
+
+FUNCTION grossIncome
+    INPUT hourlyPay
+    SET overtimeRate = hourlyPay * 1.5
+    
+    IF hoursWorked > 40 THEN
+        SET basePay = hourlyPay * 40
+        SET overtimePay = (hoursWorked - 40) * overtimeRate
+    ELSE
+        SET basePay = hourlyPay * hoursWorked
+        SET overtimePay = 0
+    END IF
+    
+    SET grossIncome = basePay + overtimePay
+    RETURN grossIncome
+END FUNCTION
+
+FUNCTION create_printable_report(employee_info)
+    PRINT "Employee Report"
+    PRINT "================"
+    PRINT "First Name: " + employee_info.firstname
+    PRINT "Last Name: " + employee_info.lastname
+    PRINT "Employee ID: " + employee_info.employeeid
+    PRINT "Number of Dependents: " + employee_info.numdependents
+    PRINT "Hours Worked: " + employee_info.hoursworked
+    PRINT "Hourly Rate: $" + employee_info.hourly_rate
+    PRINT "Gross Income: $" + grossIncome(employee_info.hourly_rate, employee_info.hoursworked)
+    PRINT "================"
+END FUNCTION
+
+END
