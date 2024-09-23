@@ -1,0 +1,103 @@
+START
+
+// MODULE 1: Employee Information
+MODULE mod1: Employee Information
+
+// Function to get employee information
+FUNCTION get_employee_info()
+    PRINT "Enter password"
+    SET password = get_password() // password entered is masked
+    
+    PRINT "Enter employee first name"
+    INPUT firstname
+    
+    PRINT "Enter employee last name"
+    INPUT lastname
+    
+    PRINT "Enter employee ID"
+    INPUT employeeid
+    
+    PRINT "Number of dependents"
+    INPUT numdependents
+    
+    PRINT "Hours worked"
+    INPUT hoursworked
+
+    // Call to retrieve hourly rate from the database
+    SET hourly_rate = call get_hourly_rate_from_db()
+    
+    RETURN (firstname, lastname, employeeid, numdependents, hoursworked, hourly_rate)
+END FUNCTION
+
+// Function to handle password input with masking
+FUNCTION get_password()
+    PRINT "Enter password"
+    SET password = ""
+    
+    WHILE TRUE
+        READ character
+        IF character == ENTER THEN
+            BREAK
+        END IF
+        APPEND character to password
+        PRINT "*" // mask the character input
+    END WHILE
+    
+    RETURN password
+END FUNCTION
+
+// MODULE 2: Database Functions
+MODULE mod2: Database
+
+// Function to connect to the database
+FUNCTION connect_to_database()
+    CONNECT to database
+    PRINT "Searching database"
+    PRINT "Database connected"
+END FUNCTION
+
+// Call to other functions
+CALL connect_to_database()
+CALL grossIncome() // make sure this has parameters if necessary
+CALL taxCalculations() // Ensure this function is defined somewhere
+OUTPUT results // Ensure results are defined
+
+STOP
+
+// MODULE 3: Payroll Calculations
+MODULE mod3: Payroll
+
+// Function to calculate gross income based on hours worked
+FUNCTION grossIncome(hourlyPay, hoursWorked)
+    SET overtimeRate = hourlyPay * 1.5
+    
+    IF hoursWorked > 40 THEN
+        SET basePay = hourlyPay * 40
+        SET overtimePay = (hoursWorked - 40) * overtimeRate
+    ELSE
+        SET basePay = hourlyPay * hoursWorked
+        SET overtimePay = 0
+    END IF
+    
+    SET grossIncome = basePay + overtimePay
+    RETURN grossIncome
+END FUNCTION
+
+// MODULE 4: Reporting
+MODULE mod4: Reporting
+
+// Function to create a printable employee report 
+FUNCTION create_printable_report(employee_info)
+    PRINT "Employee Report"
+    PRINT "================"
+    PRINT "First Name: " + employee_info.firstname
+    PRINT "Last Name: " + employee_info.lastname
+    PRINT "Employee ID: " + employee_info.employeeid
+    PRINT "Number of Dependents: " + employee_info.numdependents
+    PRINT "Hours Worked: " + employee_info.hoursworked
+    PRINT "Hourly Rate: $" + employee_info.hourly_rate
+    PRINT "Gross Income: $" + grossIncome(employee_info.hourly_rate, employee_info.hoursworked)
+    PRINT "================"
+END FUNCTION
+
+END
