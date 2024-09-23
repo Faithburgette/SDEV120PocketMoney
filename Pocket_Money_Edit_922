@@ -1,10 +1,12 @@
 START
 
+// MODULE 1: Employee Information
 MODULE mod1: Employee Information
 
-FUNCTION get_employee_info
+// Function to get employee information
+FUNCTION get_employee_info()
     PRINT "Enter password"
-    SET password = get_password()
+    SET password = get_password() //password entered is masked
     
     PRINT "Enter employee first name"
     INPUT firstname
@@ -20,13 +22,15 @@ FUNCTION get_employee_info
     
     PRINT "Hours worked"
     INPUT hoursworked
-    
+
+    // Call to retrieve hourly rate from the database
     SET hourly_rate = call get_hourly_rate_from_db()
     
     RETURN (firstname, lastname, employeeid, numdependents, hoursworked, hourly_rate)
 END FUNCTION
 
-FUNCTION get_password
+// Function to handle password input with masking
+FUNCTION get_password ()
     PRINT "Enter password"
     SET password = ""
     
@@ -36,17 +40,20 @@ FUNCTION get_password
             BREAK
         END IF
         APPEND character to password
-        PRINT "*"
+        PRINT "*" // mask the character input
     END WHILE
     
     RETURN password
 END FUNCTION
 
+MODULE 2: Database Functions
 MODULE mod2: Database
 
-FUNCTION connect_to_database
+//Function to connect to the database
+FUNCTION connect_to_database()
     CONNECT to database
     PRINT "Searching database"
+    PRINT "Database connected"
 END FUNCTION
 
 CALL grossIncome()
@@ -55,7 +62,10 @@ OUTPUT results
 
 STOP
 
-FUNCTION grossIncome
+MODULE 3: Payroll Calculations
+MODULE mod3: Payroll
+// Function to calculate gross income based on hours worked
+FUNCTION grossIncome (hourlyPay, hoursWorked)
     INPUT hourlyPay
     SET overtimeRate = hourlyPay * 1.5
     
@@ -71,6 +81,9 @@ FUNCTION grossIncome
     RETURN grossIncome
 END FUNCTION
 
+MODULE 4: Reporting
+MODULE mod4: Reporting
+//Function to create a printable employee report 
 FUNCTION create_printable_report(employee_info)
     PRINT "Employee Report"
     PRINT "================"
