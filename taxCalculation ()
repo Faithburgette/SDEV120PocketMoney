@@ -1,0 +1,9 @@
+taxCalculation ()
+  if employeeDependents > 0
+    then depTotal = employeeDependents * 25 
+  else depTotal = 0
+  endif
+  stateTax = (grossIncome * 56) / 1000
+  fedTax = (grossIncome * 79) / 1000
+  totalDeductions = fedTax + stateTax + depTotal
+  netIncome = grossIncome - totalDeductions
