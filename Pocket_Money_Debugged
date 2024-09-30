@@ -26,7 +26,7 @@ FUNCTION get_employee_info()
     // Call to retrieve hourly rate from the database
     SET hourly_rate = call get_hourly_rate_from_db()
     
-    RETURN (firstname, lastname, employeeid, numdependents, hoursworked, hourly_rate)
+    RETURN (firstname, lastname, employeeid, numdependents, hoursworked, hourlyrate)
 END FUNCTION
 
 // Function to handle password input with masking
@@ -87,16 +87,16 @@ END FUNCTION
 MODULE mod4: Reporting
 
 // Function to create a printable employee report 
-FUNCTION create_printable_report(employee_info)
+FUNCTION create_printable_report(employeeinfo)
     PRINT "Employee Report"
     PRINT "================"
-    PRINT "First Name: " + employee_info.firstname
-    PRINT "Last Name: " + employee_info.lastname
-    PRINT "Employee ID: " + employee_info.employeeid
-    PRINT "Number of Dependents: " + employee_info.numdependents
-    PRINT "Hours Worked: " + employee_info.hoursworked
-    PRINT "Hourly Rate: $" + employee_info.hourly_rate
-    PRINT "Gross Income: $" + grossIncome(employee_info.hourly_rate, employee_info.hoursworked)
+    PRINT "First Name: " + firstname
+    PRINT "Last Name: " + lastname
+    PRINT "Employee ID: " + employeeid
+    PRINT "Number of Dependents: " + numdependents
+    PRINT "Hours Worked: " + hoursworked
+    PRINT "Hourly Rate: $" + hourlyrate
+    PRINT "Gross Income: $" + grossIncome(employeeinfo.hourlyrate, employeeinfo.hoursworked)
     PRINT "================"
 END FUNCTION
 
