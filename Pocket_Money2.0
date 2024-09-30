@@ -58,11 +58,16 @@ FUNCTION get_password()
 END FUNCTION
 
 
-// MODULE 2: Database Functions
-
+// MODULE 2: Database Function for secure connection
 FUNCTION connect_to_database()
     PRINT "Connecting to database..."
-    SET connection = DATABASE_CONNECT("database_url", "username", "password")
+    // Use secure credentials
+    SET db_url = "secure_database_url"
+    SET username = "secure_username"
+    SET password = get_secure_password()  // Function to securely retrieve password
+    
+    // Establish a secure connection
+    SET connection = DATABASE_CONNECT(db_url, username, password)
     
     IF connection IS NOT NULL THEN
         PRINT "Database connected successfully."
