@@ -1,15 +1,15 @@
 Declarations
-  string password
-  string firstName
-  string lastName
-  string employeeID
-  num numDependents
-  num hoursWorked
-  num hourlyPay
-  num overtimePay
-  num basePay
-  num grossIncome
-  num  depTotal
-  num stateTax
-  num fedTax
-  num netIncome
+string password
+string firstName
+string lastName
+integer employeeID
+integer numDependents
+float hoursWorked
+float hourlyPay
+float overtimePay
+float basePay
+float grossIncome
+integer depTotal
+float stateTax
+float fedTax
+float netIncome
