@@ -1,0 +1,124 @@
+start
+
+string password
+string firstName
+string lastName
+integer employeeID
+integer numDependents
+float hoursWorked
+float hourlyPay
+float overtimePay
+float basePay
+float grossIncome
+integer depTotal
+float stateTax
+float fedTax
+float netIncome
+
+// MODULE 1: Employee Information
+FUNCTION get_employee_info()
+    PRINT "Enter password"
+    SET password = get_password()  // password entered is masked
+
+    PRINT "Enter employee first name"
+    INPUT firstName
+
+    PRINT "Enter employee last name"
+    INPUT lastName
+
+    PRINT "Enter employee ID"
+    INPUT employeeID
+
+    PRINT "Number of dependents"
+    INPUT numDependents
+
+    PRINT "Hours worked"
+    INPUT hoursWorked
+
+    // Call to retrieve hourly rate from the database
+    SET hourlyPay = get_hourly_rate_from_db()
+
+    RETURN (firstName, lastName, employeeID, numDependents, hoursWorked, hourlyPay)
+END FUNCTION
+
+FUNCTION get_password()
+    PRINT "Enter password"
+    SET password = ""
+
+    WHILE TRUE
+        READ character
+        IF character == ENTER THEN
+            BREAK
+        END IF
+        SET password = password + character  // Correctly append character to password
+        PRINT "*"  // mask the character input
+    END WHILE
+
+    RETURN password
+END FUNCTION
+
+
+// MODULE 2: Database Functions
+
+FUNCTION connect_to_database()
+    PRINT "Connecting to database..."
+    SET connection = DATABASE_CONNECT("database_url", "username", "password")
+    
+    IF connection IS NOT NULL THEN
+        PRINT "Database connected successfully."
+    ELSE
+        PRINT "Failed to connect to the database."
+    END IF
+    
+    RETURN connection
+END FUNCTION
+
+FUNCTION get_hourly_rate_from_db()
+    // Placeholder for database retrieval logic
+    RETURN 20.0  // Example hourly rate
+END FUNCTION
+
+// MODULE 3: Payroll
+
+FUNCTION calculate_gross_income(hourlyPay, hoursWorked)
+    SET overtimeRate = hourlyPay * 1.5
+
+    IF hoursWorked > 40 THEN
+        SET basePay = hourlyPay * 40
+        SET overtimePay = (hoursWorked - 40) * overtimeRate
+    ELSE
+        SET basePay = hourlyPay * hoursWorked
+        SET overtimePay = 0
+    END IF
+
+    SET grossIncome = basePay + overtimePay
+    RETURN grossIncome
+END FUNCTION
+
+FUNCTION calculate_taxes(grossIncome)
+    SET stateTax = grossIncome * 0.05
+    SET fedTax = grossIncome * 0.10
+    SET netIncome = grossIncome - stateTax - fedTax
+    RETURN (stateTax, fedTax, netIncome)
+END FUNCTION
+
+// MODULE 4: Reporting
+
+FUNCTION create_printable_report(employeeInfo)
+    SET grossIncome = calculate_gross_income(employeeInfo.hourlyPay, employeeInfo.hoursWorked)
+    SET (stateTax, fedTax, netIncome) = calculate_taxes(grossIncome)
+
+    PRINT "Employee Report"
+    PRINT "================"
+    PRINT "First Name: " + firstName
+    PRINT "Last Name: " + lastName
+    PRINT "Employee ID: " + employeeID
+    PRINT "Number of Dependents: " + numDependents
+    PRINT "Hours Worked: " + hoursWorked
+    PRINT "Hourly Rate: $" + hourlyPay
+    PRINT "Gross Income: $" + grossIncome
+    PRINT "State Tax: $" + stateTax
+    PRINT "Federal Tax: $" + fedTax
+    PRINT "Net Income: $" + netIncome
+    PRINT "================"
+END FUNCTION
