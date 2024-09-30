@@ -122,3 +122,4 @@ FUNCTION create_printable_report(employeeInfo)
     PRINT "Net Income: $" + netIncome
     PRINT "================"
 END FUNCTION
+stop
