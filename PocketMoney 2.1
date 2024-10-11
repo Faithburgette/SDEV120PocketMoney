@@ -1,0 +1,189 @@
+// Start of the program
+
+string password
+string firstName
+string lastName
+integer employeeID
+integer numDependents
+float hoursWorked
+float hourlyPay
+float overtimePay
+float basePay
+float grossIncome
+float stateTax
+float fedTax
+float netIncome
+string addMore
+string char
+
+// MODULE 1: Security Check
+FUNCTION get_password()
+    PRINT "Please enter your password:"
+    password = ""
+    WHILE TRUE
+        // Simulate getting a character from input
+        INPUT char  // Get a single character input
+        
+        IF char == ENTER THEN  // Check if 'ENTER' key was pressed
+            BREAK
+        ELSE
+            password = password + char  // Append the character to the password
+            PRINT "*"  // Mask the character input by printing "*"
+        END IF
+    END WHILE
+    RETURN password
+END FUNCTION
+
+FUNCTION check_password(password)
+    // Read from a file with accepted passwords
+    acceptedPasswords = get_passwords_from_file()
+    
+    IF password IN acceptedPasswords THEN
+        RETURN True
+    ELSE
+        RETURN False
+    END IF
+END FUNCTION
+
+// MODULE 2: Employee Information
+FUNCTION get_employee_info()
+    PRINT "Enter password"
+    SET password = get_password()  // password entered is masked
+
+    IF NOT check_password(password) THEN
+        PRINT "Invalid password!"
+        RETURN
+    END IF
+
+    PRINT "Enter employee first name"
+    INPUT firstName
+
+    PRINT "Enter employee last name"
+    INPUT lastName
+
+    PRINT "Enter employee ID"
+    INPUT employeeID
+
+    PRINT "Number of dependents"
+    INPUT numDependents
+
+    PRINT "Hours worked"
+    INPUT hoursWorked
+
+    // Call to retrieve hourly rate from the database
+    SET hourlyPay = get_hourly_rate_from_db()
+
+    RETURN (firstName, lastName, employeeID, numDependents, hoursWorked, hourlyPay)
+END FUNCTION
+
+// MODULE 3: Payroll Calculation
+FUNCTION calculate_gross_income(hourlyPay, hoursWorked)
+    IF hoursWorked > 40 THEN
+        SET basePay = hourlyPay * 40
+        SET overtimePay = (hoursWorked - 40) * hourlyPay * 1.5
+    ELSE
+        SET basePay = hourlyPay * hoursWorked
+        SET overtimePay = 0
+    END IF
+
+    SET grossIncome = basePay + overtimePay
+    RETURN grossIncome
+END FUNCTION
+
+FUNCTION calculate_taxes(grossIncome)
+    SET stateTax = grossIncome * 0.05
+    SET fedTax = grossIncome * 0.10
+    SET netIncome = grossIncome - stateTax - fedTax
+    RETURN (stateTax, fedTax, netIncome)
+END FUNCTION
+
+// MODULE 4: Writing Report and Sending to Printer
+FUNCTION write_employee_report_and_send_to_printer(employeeInfo, grossIncome, stateTax, fedTax, netIncome)
+    PRINT "Logging employee report to a text file and sending it to the printer..."
+
+    // Create the employee report
+    report = "Employee Report\n"
+    report = report + "================\n"
+    report = report + "First Name: " + employeeInfo.firstName + "\n"
+    report = report + "Last Name: " + employeeInfo.lastName + "\n"
+    report = report + "Employee ID: " + employeeInfo.employeeID + "\n"
+    report = report + "Number of Dependents: " + employeeInfo.numDependents + "\n"
+    report = report + "Hours Worked: " + employeeInfo.hoursWorked + "\n"
+    report = report + "Hourly Rate: $" + employeeInfo.hourlyPay + "\n"
+    report = report + "Gross Income: $" + grossIncome + "\n"
+    report = report + "State Tax: $" + stateTax + "\n"
+    report = report + "Federal Tax: $" + fedTax + "\n"
+    report = report + "Net Income: $" + netIncome + "\n"
+    report = report + "================\n"
+
+    // Append the report to a log file (e.g., "employee_reports.txt")
+    OPEN "employee_reports.txt" FOR APPEND AS fileHandle
+    WRITE report TO fileHandle
+    CLOSE fileHandle
+
+    // Send the report to the default printer
+    PRINT "Sending report to the default printer..."
+    OPEN "temp_report.txt" FOR WRITE AS tempFile
+    WRITE report TO tempFile
+    CLOSE tempFile
+    
+    // Use system command to send the file to the default printer
+    SYSTEM("print temp_report.txt")
+    
+    PRINT "Report has been logged and sent to the printer."
+END FUNCTION
+
+// MODULE 5: User Loop for Input and Printing
+FUNCTION process_employee_requests()
+    WHILE TRUE
+        // Get employee information
+        SET employeeInfo = get_employee_info()
+
+        IF employeeInfo == NULL THEN
+            CONTINUE
+        END IF
+
+        // Calculate gross income and taxes
+        SET grossIncome = calculate_gross_income(employeeInfo.hourlyPay, employeeInfo.hoursWorked)
+        SET (stateTax, fedTax, netIncome) = calculate_taxes(grossIncome)
+
+        // Print and log employee report, then send it to the printer
+        write_employee_report_and_send_to_printer(employeeInfo, grossIncome, stateTax, fedTax, netIncome)
+        
+        // Write employee data to CSV for database purposes
+        write_employee_data_to_csv(employeeInfo)
+        
+        // Ask the user if they want to add another employee
+        PRINT "Do you want to add another employee? (yes/no)"
+        INPUT addMore
+
+        IF addMore == "no" THEN
+            BREAK
+        END IF
+    END WHILE
+END FUNCTION
+
+// MODULE 6: Writing to CSV File
+FUNCTION write_employee_data_to_csv(employeeInfo)
+    PRINT "Writing employee data to the CSV file..."
+
+    // Open the CSV file in append mode
+    OPEN "employees.csv" FOR APPEND AS fileHandle
+    
+    // Write the employee information to the CSV file
+    WRITE employeeInfo.firstName + "," + employeeInfo.lastName + "," + employeeInfo.employeeID + "," + employeeInfo.numDependents + "," + employeeInfo.hoursWorked + "," + employeeInfo.hourlyPay + "\n" TO fileHandle
+    
+    // Close the file after writing
+    CLOSE fileHandle
+    
+    PRINT "Employee data has been written to employees.csv"
+END FUNCTION
+
+// MODULE 7: Opening the CSV in Excel
+FUNCTION open_csv_in_excel()
+    PRINT "Opening employees.csv in Excel..."
+    SYSTEM("start excel employees.csv")
+END FUNCTION
+
+// Start processing employee requests
+process_employee_requests()
