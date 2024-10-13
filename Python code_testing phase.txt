@@ -1,0 +1,148 @@
+import getpass
+
+# Global Variables
+password = ""
+first_name = ""
+last_name = ""
+employee_id = 0
+num_dependents = 0
+hours_worked = 0.0
+hourly_pay = 0.0
+overtime_pay = 0.0
+base_pay = 0.0
+gross_income = 0.0
+state_tax = 0.0
+fed_tax = 0.0
+net_income = 0.0
+add_more = ""
+
+# MODULE 1: Security Check
+def get_password():
+    print("Please enter your password:")
+    password = getpass.getpass(prompt="Password: ")  # Masked input
+    return password
+
+def check_password(password):
+    # Read from a file with accepted passwords (assuming the file exists)
+    accepted_passwords = get_passwords_from_file()  # Implement this function to read from a file
+    if password in accepted_passwords:
+        return True
+    else:
+        print("Access denied")
+        return False
+
+def get_passwords_from_file():
+    # Mock implementation of reading passwords from a file
+    # In real implementation, you should read the actual file
+    return ['password123', 'admin', 'letmein']  # Replace with your actual passwords
+
+# MODULE 2: Employee Information
+def get_employee_info():
+    global hourly_pay  # To access the variable across functions
+    print("Enter password")
+    password = get_password()  # Password entered is masked
+
+    if not check_password(password):
+        print("Invalid password!")
+        return None
+
+    first_name = input("Enter employee first name: ")
+    last_name = input("Enter employee last name: ")
+    employee_id = int(input("Enter employee ID: "))
+    num_dependents = int(input("Number of dependents: "))
+    hours_worked = float(input("Hours worked: "))
+
+    # Call to retrieve hourly rate from the database
+    hourly_pay = get_hourly_rate_from_db()  # Implement this function as needed
+
+    return {
+        'first_name': first_name,
+        'last_name': last_name,
+        'employee_id': employee_id,
+        'num_dependents': num_dependents,
+        'hours_worked': hours_worked,
+        'hourly_pay': hourly_pay
+    }
+
+def get_hourly_rate_from_db():
+    # Mock implementation, replace with actual database call
+    return 20.0  # Example hourly rate
+
+# MODULE 3: Payroll Calculation
+def calculate_gross_income(hourly_pay, hours_worked):
+    if hours_worked > 40:
+        base_pay = hourly_pay * 40
+        overtime_pay = (hours_worked - 40) * hourly_pay * 1.5
+    else:
+        base_pay = hourly_pay * hours_worked
+        overtime_pay = 0
+
+    gross_income = base_pay + overtime_pay
+    return gross_income
+
+def calculate_taxes(gross_income):
+    state_tax = gross_income * 0.05
+    fed_tax = gross_income * 0.10
+    net_income = gross_income - state_tax - fed_tax
+    return state_tax, fed_tax, net_income
+
+# MODULE 4: Writing Report and Sending to Printer
+def write_employee_report_and_send_to_printer(employee_info, gross_income, state_tax, fed_tax, net_income):
+    print("Logging employee report to a text file and sending it to the printer...")
+
+    # Create the employee report
+    report = (
+        "Employee Report\n"
+        "================\n"
+        f"First Name: {employee_info['first_name']}\n"
+        f"Last Name: {employee_info['last_name']}\n"
+        f"Employee ID: {employee_info['employee_id']}\n"
+        f"Number of Dependents: {employee_info['num_dependents']}\n"
+        f"Hours Worked: {employee_info['hours_worked']}\n"
+        f"Hourly Rate: ${employee_info['hourly_pay']:.2f}\n"
+        f"Gross Income: ${gross_income:.2f}\n"
+        f"State Tax: ${state_tax:.2f}\n"
+        f"Federal Tax: ${fed_tax:.2f}\n"
+        f"Net Income: ${net_income:.2f}\n"
+        "================\n"
+    )
+
+    # Append the report to a log file (e.g., "employee_reports.txt")
+    with open("employee_reports.txt", "a") as file_handle:
+        file_handle.write(report)
+
+    print("Report has been logged.")
+
+# MODULE 5: User Loop for Input and Printing
+def process_employee_requests():
+    while True:
+        # Get employee information
+        employee_info = get_employee_info()
+
+        if employee_info is None:
+            continue
+
+        # Calculate gross income and taxes
+        gross_income = calculate_gross_income(employee_info['hourly_pay'], employee_info['hours_worked'])
+        state_tax, fed_tax, net_income = calculate_taxes(gross_income)
+
+        # Print and log employee report
+        write_employee_report_and_send_to_printer(employee_info, gross_income, state_tax, fed_tax, net_income)
+
+        # Ask the user if they want to add another employee
+        add_more = input("Do you want to add another employee? (yes/no): ").strip().lower()
+
+        if add_more == "no":
+            break
+
+# MODULE 6: Writing to CSV File
+def write_employee_data_to_csv(employee_info):
+    print("Writing employee data to the CSV file...")
+    # Open the CSV file in append mode
+    with open("employees.csv", "a", newline='') as file_handle:
+        writer = csv.writer(file_handle)
+        writer.writerow([employee_info['first_name'], employee_info['last_name'], employee_info['employee_id'], employee_info['num_dependents'], employee_info['hours_worked'], employee_info['hourly_pay']])
+    print("Employee data has been written to employees.csv")
+
+# Start processing employee requests
+process_employee_requests()
