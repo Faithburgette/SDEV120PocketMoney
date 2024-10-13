@@ -98,11 +98,11 @@ FUNCTION calculate_taxes(grossIncome)
     RETURN (stateTax, fedTax, netIncome)
 END FUNCTION
 
-// MODULE 4: Writing Report and Sending to Printer
+# MODULE 4: Writing Report and Sending to Printer
 FUNCTION write_employee_report_and_send_to_printer(employeeInfo, grossIncome, stateTax, fedTax, netIncome)
     PRINT "Logging employee report to a text file and sending it to the printer..."
 
-    // Create the employee report
+    # Create the employee report
     report = "Employee Report\n"
     report = report + "================\n"
     report = report + "First Name: " + employeeInfo.firstName + "\n"
@@ -117,18 +117,21 @@ FUNCTION write_employee_report_and_send_to_printer(employeeInfo, grossIncome, st
     report = report + "Net Income: $" + netIncome + "\n"
     report = report + "================\n"
 
-    // Append the report to a log file (e.g., "employee_reports.txt")
+    # PRINT the report before sending to the printer
+    PRINT report
+
+    # Append the report to a log file (e.g., "employee_reports.txt")
     OPEN "employee_reports.txt" FOR APPEND AS fileHandle
     WRITE report TO fileHandle
     CLOSE fileHandle
 
-    // Send the report to the default printer
+    # Send the report to the default printer
     PRINT "Sending report to the default printer..."
     OPEN "temp_report.txt" FOR WRITE AS tempFile
     WRITE report TO tempFile
     CLOSE tempFile
     
-    // Use system command to send the file to the default printer
+    # Use system command to send the file to the default printer
     SYSTEM("print temp_report.txt")
     
     PRINT "Report has been logged and sent to the printer."
