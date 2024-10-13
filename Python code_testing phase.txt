@@ -2,9 +2,9 @@ import getpass
 
 # Global Variables
 password = ""
+employee_id = 0
 first_name = ""
 last_name = ""
-employee_id = 0
 num_dependents = 0
 hours_worked = 0.0
 hourly_pay = 0.0
@@ -46,9 +46,9 @@ def get_employee_info():
         print("Invalid password!")
         return None
 
+    employee_id = int(input("Enter employee ID: "))
     first_name = input("Enter employee first name: ")
     last_name = input("Enter employee last name: ")
-    employee_id = int(input("Enter employee ID: "))
     num_dependents = int(input("Number of dependents: "))
     hours_worked = float(input("Hours worked: "))
 
@@ -56,9 +56,9 @@ def get_employee_info():
     hourly_pay = get_hourly_rate_from_db()  # Implement this function as needed
 
     return {
+        'employee_id': employee_id,
         'first_name': first_name,
         'last_name': last_name,
-        'employee_id': employee_id,
         'num_dependents': num_dependents,
         'hours_worked': hours_worked,
         'hourly_pay': hourly_pay
@@ -94,9 +94,9 @@ def write_employee_report_and_send_to_printer(employee_info, gross_income, state
     report = (
         "Employee Report\n"
         "================\n"
+        f"Employee ID: {employee_info['employee_id']}\n"
         f"First Name: {employee_info['first_name']}\n"
         f"Last Name: {employee_info['last_name']}\n"
-        f"Employee ID: {employee_info['employee_id']}\n"
         f"Number of Dependents: {employee_info['num_dependents']}\n"
         f"Hours Worked: {employee_info['hours_worked']}\n"
         f"Hourly Rate: ${employee_info['hourly_pay']:.2f}\n"
